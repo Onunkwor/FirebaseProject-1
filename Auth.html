@@ -20,7 +20,7 @@
     <!-- form section -->
     <section class="text-center" id="auth-form">
         <div class="container-lg">
-            <div class="row justify-content-center align-items-center">
+            <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-lg-6">
                     <img src="./assets/quiz.png" alt="quiz icon" class="img-fluid">
                 </div>
@@ -32,7 +32,7 @@
                         autocomplete="given-name">
                     </div>
     
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 align-content-start">
                         <span class="input-group-text" id="basic-addon2"><i class="bi bi-envelope"></i></span>
                         <input type="text" class="form-control" id="email" placeholder="Email" aria-label="Email" aria-describedby="basic-addon2"
                         autocomplete="off">
@@ -102,19 +102,68 @@
 
 
     <div class="top-secret" id="top-secret">
-        <div class="container-sm">
+
+     
+       
+
+      <div class="text-center vh-100 d-flex align-items-center">
+        <div class="container-lg">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-6">
+              <img src="./assets/7489484.jpg" alt="" class="img-fluid">
+            </div>
+            <div class="col-lg-5 mt-3">
+              <p>
+                Welcome to the quiz! You have 10 multiple-choice questions to answer within a 5-minute time limit. Select the correct answer (A, B, C, D) for each question and click "Submit" when you're finished. Good luck!
+              </p>
+              <button class="btn btn-success" id="start">Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+
+
+   
+      <!-- <div class="row align-items-center justify-content-center bg-warning">
+        <div class="shadow col-5 p-4 bg-light">
+            Welcome to the quiz! You have 10 multiple-choice questions to answer within a 5-minute time limit. Select the correct answer (A, B, C, D) for each question and click "Submit" when you're finished. Good luck!
+            
+            </div>
+            
+        </div>
+        
+    </div> -->
+    
+   
+
+
+    
+        <!-- <div class="container-lg text-center d-none">
           <div id="question-container" class="hide">
              <div class="controls">
+              <div id="question">
+                Question
+              </div>
+              <div id="answer-buttons">
+                <button class="btn">Answer 1</button>
+                <button class="btn">Answer 2</button>
+                <button class="btn">Answer 3</button>
+                <button class="btn">Answer 4</button>
+              </div>
               <button class="btn btn-secondary" id="start-btn">Start</button>
               <button class="btn btn-success" id="next-btn hide">Next</button>
              </div>
           </div>
-        </div>
-        <button class="btn btn-danger" id="signOut">Sign Out</button>
+        </div> -->
+        <button class="btn btn-danger" id="signOut">Sign Out</button> 
+
+
     </div>
 
 
-
+    <div id="timer" class="hidden">05:00</div>
     
 </body>
 </html>

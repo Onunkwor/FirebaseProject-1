@@ -36,6 +36,8 @@ const topSecret = document.querySelector('#top-secret');
 const authForm = document.querySelector('#auth-form');
 const toastSignUp = document.querySelector('#liveToast');
 const toastSignIn = document.querySelector('#liveToast2');
+const start = document.querySelector('#start');
+const timer = document.querySelector('#timer');
 
 topSecret.style.display = 'none';
 
@@ -127,5 +129,34 @@ signUpButton.addEventListener('click', () => {
  
     signOutButton.addEventListener('click', () => {
         signUserOut();
-        checkAuthState()
+    })
+    
+    const targetTime = 300;
+    let currentTime = targetTime;
+
+    // Function to update the timer display
+    function updateTimerDisplay() {
+        const minutes = Math.floor(currentTime / 60);
+        const seconds = currentTime % 60;
+        const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timer.textContent = formattedTime;
+    }
+
+    // Function to start the countdown
+    function startCountdown() {
+        const timerInterval = setInterval(() => {
+            if (currentTime <= 0) {
+                clearInterval(timerInterval);
+                alert('Time is up!');
+            } else {
+                currentTime--;
+                updateTimerDisplay();
+            }
+        }, 1000);
+    }
+
+    start.addEventListener('click', () => {
+      topSecret.style.display = 'none';
+      timer.style.display = 'block';
+      startCountdown();
     })
