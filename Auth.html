@@ -12,12 +12,14 @@
     <link rel="stylesheet" href="style.css">
     <!-- Js link -->
     <script type="module" src="app.js" defer></script>
+    <!-- ChartJs link -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body>
     
       
 
-    <!-- form section -->
+    <!-- ====================== Authentication section ========================== -->
     <section class="text-center" id="auth-form">
         <div class="container-lg">
             <div class="row d-flex justify-content-center align-items-center">
@@ -100,70 +102,230 @@
         </div>
     </section>
 
-
+ <!-- ========================= Instruction Section ======================= -->
     <div class="top-secret" id="top-secret">
-
-     
-       
-
-      <div class="text-center vh-100 d-flex align-items-center">
-        <div class="container-lg">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-6">
+      
+      <div class="container-lg text-center">
+        <div class="d-flex vh-100 align-items-center justify-content-center">
+          <div class="row align-items-center justify-content-center">
+            <div class="col-6 mb-3">
               <img src="./assets/7489484.jpg" alt="" class="img-fluid">
-            </div>
-            <div class="col-lg-5 mt-3">
+              </div>
+            <div class="col-lg-5">
               <p>
                 Welcome to the quiz! You have 10 multiple-choice questions to answer within a 5-minute time limit. Select the correct answer (A, B, C, D) for each question and click "Submit" when you're finished. Good luck!
               </p>
-              <button class="btn btn-success" id="start">Start</button>
+              <button class="btn btn-success " id="start">Start</button>
             </div>
-          </div>
+            
         </div>
       </div>
-      
-      
-
-
-   
-      <!-- <div class="row align-items-center justify-content-center bg-warning">
-        <div class="shadow col-5 p-4 bg-light">
-            Welcome to the quiz! You have 10 multiple-choice questions to answer within a 5-minute time limit. Select the correct answer (A, B, C, D) for each question and click "Submit" when you're finished. Good luck!
-            
-            </div>
-            
-        </div>
-        
-    </div> -->
-    
-   
-
-
-    
-        <!-- <div class="container-lg text-center d-none">
-          <div id="question-container" class="hide">
-             <div class="controls">
-              <div id="question">
-                Question
-              </div>
-              <div id="answer-buttons">
-                <button class="btn">Answer 1</button>
-                <button class="btn">Answer 2</button>
-                <button class="btn">Answer 3</button>
-                <button class="btn">Answer 4</button>
-              </div>
-              <button class="btn btn-secondary" id="start-btn">Start</button>
-              <button class="btn btn-success" id="next-btn hide">Next</button>
-             </div>
-          </div>
-        </div> -->
-        <button class="btn btn-danger" id="signOut">Sign Out</button> 
-
-
+      </div>
     </div>
+              <!--=============== Question Section ========================  -->
+    <section id="question-section" class="hidden">
+      <button class="btn btn-danger mt-5" id="signOut">Sign Out</button> 
+    <div class="position-sticky top-0">
+      <div class="d-flex justify-content-center timer align-items-end">
+        <div id="timer" class="hidden p-3 bg-warning text-center col-3 col-lg-1 rounded-pill text-center border border-5">05:00</div>
+      </div>
+    </div>
+      <div class="container-sm ">
+        <div id="quiz-container">
+          <!-- Question 1 -->
+          <div class="question">
+              <p>Question 1: What is the capital of France?</p>
+              <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                <input type="radio" class="btn-check" name="vbtn-radio-1" id="vbtn-radio1-1" autocomplete="off">
+                <label class="btn btn-outline-info" for="vbtn-radio1-1">Paris</label><br>
+                <p class="feedback" id="feedback-1-1"></p>
+                <input type="radio" class="btn-check" name="vbtn-radio-1" id="vbtn-radio1-2" autocomplete="off">
+                <label class="btn btn-outline-info" for="vbtn-radio1-2">London</label><br>
+                <p class="feedback" id="feedback-1-2"></p>
+                <input type="radio" class="btn-check" name="vbtn-radio-1" id="vbtn-radio1-3" autocomplete="off">
+                <label class="btn btn-outline-info" for="vbtn-radio1-3">Berlin</label><br>
+                <p class="feedback" id="feedback-1-3"></p>
+                <input type="radio" class="btn-check" name="vbtn-radio-1" id="vbtn-radio1-4" autocomplete="off">
+                <label class="btn btn-outline-info" for="vbtn-radio1-4">Madrid</label>
+                <p class="feedback" id="feedback-1-4"></p>
+              </div>
+          </div>
+          <!-- Question 2 -->
+          <div class="question mt-3">
+            <p>Question 2: Which planet is known as the "Red Planet"?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-2" id="vbtn-radio2-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio2-1">Earth</label><br>
+              <p class="feedback" id="feedback-2-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-2" id="vbtn-radio2-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio2-2">Jupiter</label><br>
+              <p class="feedback" id="feedback-2-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-2" id="vbtn-radio2-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio2-3">Mars</label><br>
+              <p class="feedback" id="feedback-2-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-2" id="vbtn-radio2-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio2-4">Saturn</label>
+              <p class="feedback" id="feedback-2-4"></p>
+            </div>
+          </div>
+          <!-- Question 3 -->
+          <div class="question mt-3">
+            <p>Question 3: What is the largest mammal on Earth?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-3" id="vbtn-radio3-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio3-1">Elephant</label><br>
+              <p class="feedback" id="feedback-3-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-3" id="vbtn-radio3-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio3-2">Blue Whale</label><br>
+              <p class="feedback" id="feedback-3-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-3" id="vbtn-radio3-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio3-3">Giraffe</label><br>
+              <p class="feedback" id="feedback-3-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-3" id="vbtn-radio3-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio3-4">Polar Bear</label>
+              <p class="feedback" id="feedback-3-4"></p>
+            </div>
+          </div>
+          <!-- Question 4 -->
+          <div class="question mt-3">
+            <p>Question 4: What is the chemical symbol for water?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-4" id="vbtn-radio4-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio4-1">H2o</label><br>
+              <p class="feedback" id="feedback-4-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-4" id="vbtn-radio4-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio4-2">C2o</label><br>
+              <p class="feedback" id="feedback-4-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-4" id="vbtn-radio4-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio4-3">O2</label><br>
+              <p class="feedback" id="feedback-4-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-4" id="vbtn-radio4-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio4-4">N2</label>
+              <p class="feedback" id="feedback-4-4"></p>
+            </div>
+          </div>
+          <!-- Question 5 -->
+          <div class="question mt-3">
+            <p>Question 5: Which of the following is a renewable source of energy?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-5" id="vbtn-radio5-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio5-1">Coal</label><br>
+              <p class="feedback" id="feedback-5-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-5" id="vbtn-radio5-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio5-2">Natural Gas</label><br>
+              <p class="feedback" id="feedback-5-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-5" id="vbtn-radio5-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio5-3">Wind</label><br>
+              <p class="feedback" id="feedback-5-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-5" id="vbtn-radio5-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio5-4">Oil</label>
+              <p class="feedback" id="feedback-5-4"></p>
+            </div>
+          </div>
+          <!-- Question 6 -->
+          <div class="question mt-3">
+            <p>Question 6: What is the largest planet in our solar system?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-6" id="vbtn-radio6-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio6-1">Earth</label><br>
+              <p class="feedback" id="feedback-6-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-6" id="vbtn-radio6-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio6-2">Mars</label><br>
+              <p class="feedback" id="feedback-6-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-6" id="vbtn-radio6-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio6-3">Jupiter</label><br>
+              <p class="feedback" id="feedback-6-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-6" id="vbtn-radio6-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio6-4">Saturn</label>
+              <p class="feedback" id="feedback-6-4"></p>
+            </div>
+          </div>
+          <!-- Question 7 -->
+          <div class="question mt-3">
+            <p>Question 7: Who painted the Mona Lisa?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-7" id="vbtn-radio7-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio7-1">Vincent van Gogh</label><br>
+              <p class="feedback" id="feedback-7-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-7" id="vbtn-radio7-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio7-2">Pablo Picasso</label><br>
+              <p class="feedback" id="feedback-7-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-7" id="vbtn-radio7-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio7-3">Leonardo da Vinci</label><br>
+              <p class="feedback" id="feedback-7-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-7" id="vbtn-radio7-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio7-4">Michelangelo</label>
+              <p class="feedback" id="feedback-7-4"></p>
+            </div>
+          </div>
+          <!-- Question 8 -->
+          <div class="question mt-3">
+            <p>Question 8: Which of the following is a warm-blooded animal?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-8" id="vbtn-radio8-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio8-1">Fish</label><br>
+              <p class="feedback" id="feedback-8-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-8" id="vbtn-radio8-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio8-2">Frog</label><br>
+              <p class="feedback" id="feedback-8-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-8" id="vbtn-radio8-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio8-3">Bird</label><br>
+              <p class="feedback" id="feedback-8-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-8" id="vbtn-radio8-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio8-4">Snake</label>
+              <p class="feedback" id="feedback-8-4"></p>
+            </div>
+            <div id="feedback"></div>
+          </div>
+          <!-- Question 9 -->
+          <div class="question mt-3">
+            <p>Question 9: What is the process by which plants make their own food using sunlight?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-9" id="vbtn-radio9-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio9-1">Respiration</label><br>
+              <p class="feedback" id="feedback-9-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-9" id="vbtn-radio9-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio9-2">Photosynthesis</label><br>
+              <p class="feedback" id="feedback-9-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-9" id="vbtn-radio9-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio9-3">Digestion</label><br>
+              <p class="feedback" id="feedback-9-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-9" id="vbtn-radio9-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio9-4">Fermentation</label>
+              <p class="feedback" id="feedback-9-4"></p>
+            </div>
+          </div>
+          <!-- Question 10 -->
+          <div class="question mt-3">
+            <p>Question 10: What is the chemical symbol for gold?</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+              <input type="radio" class="btn-check" name="vbtn-radio-10" id="vbtn-radio10-1" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio10-1">Go</label><br>
+              <p class="feedback" id="feedback-10-1"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-10" id="vbtn-radio10-2" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio10-2">Gi</label><br>
+              <p class="feedback" id="feedback-10-2"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-10" id="vbtn-radio10-3" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio10-3">Au</label><br>
+              <p class="feedback" id="feedback-10-3"></p>
+              <input type="radio" class="btn-check" name="vbtn-radio-10" id="vbtn-radio10-4" autocomplete="off">
+              <label class="btn btn-outline-info" for="vbtn-radio10-4">Ag</label>
+              <p class="feedback" id="feedback-10-4"></p>
+            </div>
+          </div>
 
+       <div class="text-center">
+        <button class="btn btn-success mb-4 submit-question">Submit</button>
+       </div>
+            <!-- Placeholder for the graph -->
+            <div id="performance-graph"></div>
+          </div>
+         
+          <canvas id="barChart" width="400" height="200"></canvas>
 
-    <div id="timer" class="hidden">05:00</div>
+      </div>
+    </section>
+    
     
 </body>
 </html>

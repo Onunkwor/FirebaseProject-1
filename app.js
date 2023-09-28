@@ -38,8 +38,10 @@ const toastSignUp = document.querySelector('#liveToast');
 const toastSignIn = document.querySelector('#liveToast2');
 const start = document.querySelector('#start');
 const timer = document.querySelector('#timer');
+const questionSection = document.querySelector('#question-section');
 
 topSecret.style.display = 'none';
+questionSection.style.display = 'none';
 
 const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
 
@@ -107,6 +109,7 @@ signUpButton.addEventListener('click', () => {
      }
      signInButton.addEventListener('click', () => {
         signUserIn();
+        
          });
 
   
@@ -147,16 +150,119 @@ signUpButton.addEventListener('click', () => {
         const timerInterval = setInterval(() => {
             if (currentTime <= 0) {
                 clearInterval(timerInterval);
-                alert('Time is up!');
+                submitButton.click();
             } else {
                 currentTime--;
                 updateTimerDisplay();
             }
+          
         }, 1000);
     }
 
     start.addEventListener('click', () => {
       topSecret.style.display = 'none';
       timer.style.display = 'block';
+      questionSection.style.display = 'block';
       startCountdown();
     })
+
+
+    
+    // Get references to HTML elements
+const submitButton = document.querySelector('.submit-question');
+const feedbackElement = document.getElementById('feedback');
+const performanceGraph = document.getElementById('performance-graph');
+
+
+// Define correct answers
+const correctAnswers = ["Paris", "Mars", "Blue Whale", "H2o", "Wind", "Jupiter", "Leonardo da Vinci", "Bird", "Photosynthesis", "Au"];
+
+// Initialize variables
+let correctCount = 0;
+
+
+// click event listener to the "Submit" button
+submitButton.addEventListener('click', () => {
+  correctCount = 0;
+  wrongCount = 0;
+  feedbackElement.innerHTML = '';
+
+  // Make the correct option green and wrong one red
+  for (let i = 1; i <= 10; i++) {
+    const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+    options.forEach((option) => {
+      const labelElement = option.nextElementSibling; // Get the label element
+      const userAnswer = labelElement.textContent;
+      if (userAnswer === correctAnswers[i - 1]) {
+        labelElement.style.backgroundColor = "green";
+        labelElement.style.color = "white"
+        labelElement.style.borderColor = "green";
+      } else {
+        labelElement.style.backgroundColor = "red";
+        labelElement.style.color = "white"
+        labelElement.style.borderColor = "red";
+      }
+    });
+  }
+
+
+  // Loop through radio buttons and check answers
+  for (let i = 1; i <= 10; i++) {
+    const selectedAnswer = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
+    if (selectedAnswer) {
+      const userAnswer = selectedAnswer.nextElementSibling.textContent;
+      const feedbackP = document.getElementById(`feedback-${i}-${selectedAnswer.id.slice(-1)}`); // Get the feedback
+      
+      if (userAnswer === correctAnswers[i - 1]) {
+        correctCount++;
+        // Display correct feedback
+        feedbackP.innerHTML = 'You answered correctly';
+        feedbackP.style.color = 'green';
+      } else {
+        // Display wrong feedback
+        feedbackP.innerHTML = 'You answered wrong';
+        feedbackP.style.color = 'red';
+      }
+    }
+  }
+  
+  // Calculate performance percentage
+  const totalQuestions = 10;
+  const performancePercentage = (correctCount / totalQuestions) * 100;
+  
+  // Display the performance graph
+  performanceGraph.textContent = `Performance: ${performancePercentage.toFixed(2)}%`;
+
+
+  // Get a reference to the canvas element
+const canvas = document.getElementById('barChart');
+
+
+// Create the bar chart
+const ctx = canvas.getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Performance'],
+    datasets: [{
+      label: 'Percentage Score',
+      data: [performancePercentage],
+      backgroundColor: 'rgba(75, 192, 192, 0.6)', // Color of the bar
+      borderColor: 'rgba(75, 192, 192, 1)', // Border color of the bar
+      borderWidth: 1, // Border width
+      barThickness: 60,
+    }],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100, 
+      },
+    },
+  },
+});
+
+})
+
+
