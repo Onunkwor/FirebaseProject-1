@@ -26,7 +26,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const userName = document.getElementById('name')
+// Get references to HTML elements
 const userEmail = document.querySelector('#email');
 const userPassword = document.querySelector('#password');
 const signUpButton = document.querySelector('.signUp');
@@ -39,12 +39,19 @@ const toastSignIn = document.querySelector('#liveToast2');
 const start = document.querySelector('#start');
 const timer = document.querySelector('#timer');
 const questionSection = document.querySelector('#question-section');
+const submitButton = document.querySelector('.submit-question');
+const feedbackElements = document.querySelectorAll('.feedback');
+const performanceGraph = document.getElementById('performance-graph');
+const toast = new bootstrap.Toast(toastSignIn);
+const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+const reset = document.querySelector('.reset-quiz');
+const canvas = document.getElementById('barChart');
 
+// Hide the instruction and quiz-question
 topSecret.style.display = 'none';
 questionSection.style.display = 'none';
 
-const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-
+// Sign User Up
 const signUserUp = async () => {
    const signUpEmail = userEmail.value;
    const signUpPassword = userPassword.value;
@@ -77,67 +84,68 @@ signUpButton.addEventListener('click', () => {
     signUserUp();
 });
 
-       
-     const signUserIn = async () => {
-        const signInEmail = userEmail.value;
-        const signInPassword = userPassword.value;
-        try{
-          await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
-          const toast = new bootstrap.Toast(toastSignIn);
-           toast.show();
-        }
-        catch (error) {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode + errorMessage);
-          let toastMessage = "";
-          
-          if (errorCode === "auth/invalid-email") {
-            toastMessage = "Invalid email";
-          }else if(errorCode === "auth/weak-password"){
-            toastMessage = "Weak password";
-          }else if(errorCode === "auth/invalid-login-credentials"){
-            toastMessage = "Please Sign up first.";
-          }
-      
-          // Display the error toast with the error message
-          const errorToastBody = document.querySelector('#errorToast .toast-body');
-          errorToastBody.textContent = toastMessage;
-          errorToast.show(); 
-        }
-     
-     }
-     signInButton.addEventListener('click', () => {
-        signUserIn();
-        
-         });
+//  Sign User In
+const signUserIn = () => {
+  const signInEmail = userEmail.value;
+  const signInPassword = userPassword.value;
 
-  
-  
-    const checkAuthState = async() => {
-       onAuthStateChanged(auth,user => {
-         if (user) {
-            authForm.style.display = "none"
-           topSecret.style.display = 'block';
-         } else {
-            authForm.style.display = "block"
-           topSecret.style.display = 'none';
-         }
-       }) 
-    }
-    checkAuthState()
-    const signUserOut = async() => {
-        await signOut(auth);
-    }
- 
-    signOutButton.addEventListener('click', () => {
-        signUserOut();
+  signInWithEmailAndPassword(auth, signInEmail, signInPassword)
+    .then(() => {
+      toast.show();
     })
-    
-    const targetTime = 300;
-    let currentTime = targetTime;
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode + errorMessage);
+      let toastMessage = "";
 
+      if (errorCode === "auth/invalid-email") {
+        toastMessage = "Invalid email";
+      } else if (errorCode === "auth/weak-password") {
+        toastMessage = "Weak password";
+      } else if (errorCode === "auth/invalid-login-credentials") {
+        toastMessage = "Please Sign up first.";
+      }
+
+      // Display the error toast with the error message
+      const errorToastBody = document.querySelector('#errorToast .toast-body');
+      errorToastBody.textContent = toastMessage;
+      errorToast.show();
+    });
+}
+
+
+signInButton.addEventListener('click', () => {
+  signUserIn();
+  });
+
+// check user authentication status
+  const checkAuthState = async() => {
+  onAuthStateChanged(auth,user => {
+  if (user) {
+    authForm.style.display = "none"
+    toast.show();
+    topSecret.style.display = 'block';
+
+  } else {
+    authForm.style.display = "block"
+    topSecret.style.display = 'none';
+  }
+  }) 
+  }
+  checkAuthState()
+// Sign User Out
+  const signUserOut = async() => {
+      await signOut(auth);
+  }
+
+  signOutButton.addEventListener('click', () => {
+      signUserOut();
+  })
+    
     // Function to update the timer display
+    let targetTime = 300;
+    let currentTime = targetTime;
     function updateTimerDisplay() {
         const minutes = Math.floor(currentTime / 60);
         const seconds = currentTime % 60;
@@ -158,7 +166,6 @@ signUpButton.addEventListener('click', () => {
           
         }, 1000);
     }
-
     start.addEventListener('click', () => {
       topSecret.style.display = 'none';
       timer.style.display = 'block';
@@ -168,25 +175,19 @@ signUpButton.addEventListener('click', () => {
 
 
     
-    // Get references to HTML elements
-const submitButton = document.querySelector('.submit-question');
-const feedbackElement = document.getElementById('feedback');
-const performanceGraph = document.getElementById('performance-graph');
-
-
 // Define correct answers
 const correctAnswers = ["Paris", "Mars", "Blue Whale", "H2o", "Wind", "Jupiter", "Leonardo da Vinci", "Bird", "Photosynthesis", "Au"];
 
 // Initialize variables
 let correctCount = 0;
+let performanceChart; // Declare the performanceChart variable here
 
 
 // click event listener to the "Submit" button
 submitButton.addEventListener('click', () => {
   correctCount = 0;
-  wrongCount = 0;
-  feedbackElement.innerHTML = '';
-
+  // show reset button
+  reset.style.display = 'inline-block';
   // Make the correct option green and wrong one red
   for (let i = 1; i <= 10; i++) {
     const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
@@ -204,8 +205,6 @@ submitButton.addEventListener('click', () => {
       }
     });
   }
-
-
   // Loop through radio buttons and check answers
   for (let i = 1; i <= 10; i++) {
     const selectedAnswer = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
@@ -229,18 +228,15 @@ submitButton.addEventListener('click', () => {
   // Calculate performance percentage
   const totalQuestions = 10;
   const performancePercentage = (correctCount / totalQuestions) * 100;
-  
-  // Display the performance graph
+  // Display the performance percentage
   performanceGraph.textContent = `Performance: ${performancePercentage.toFixed(2)}%`;
+  performanceGraph.style.display = 'block';
 
-
-  // Get a reference to the canvas element
-const canvas = document.getElementById('barChart');
-
-
+  
+canvas.style.display = "block"
 // Create the bar chart
 const ctx = canvas.getContext('2d');
-new Chart(ctx, {
+performanceChart = new Chart(ctx, {
   type: 'bar',
   data: {
     labels: ['Performance'],
@@ -265,4 +261,63 @@ new Chart(ctx, {
 
 })
 
+
+// Reset quiz
+reset.addEventListener('click', () => {
+  performanceGraph.style.display = 'none';
+  reset.style.display = 'none';
+ 
+  // Destroy the existing chart if it exists
+  if (performanceChart) {
+    performanceChart.destroy();
+  }
+
+  // Reset Time
+  currentTime = targetTime;
+  updateTimerDisplay();
+  feedbackElements.forEach((feedbackElement) => {
+    feedbackElement.innerHTML = '';
+  });
+
+  //Turns the option back to default
+  const options = document.querySelectorAll(`input[type="radio"]`);
+  options.forEach((option) => {
+    const labelElement = option.nextElementSibling; // Get the label element
+    // Reset the color and background color
+    labelElement.style.color = "#4fd8f4";
+    labelElement.style.borderColor = "#4fd8f4";
+    labelElement.style.backgroundColor = "white";
+  });
+
+  // Changes the background color of selected option
+  for (let i = 1; i <= 10; i++) {
+    const radioButtons = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+    radioButtons.forEach((radioButton) => {
+      radioButton.addEventListener('click', () => {
+        // Set the background color of the selected option to "blue"
+        const selectedOption = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
+        // makes sure only one option is selected at a time 
+        radioButtons.forEach((otherRadioButton) => {
+          const otherLabel = otherRadioButton.nextElementSibling;
+          if (otherRadioButton !== selectedOption) {
+            otherRadioButton.checked = false; // Uncheck the other option 
+            otherLabel.style.color = "#4fd8f4";
+            otherLabel.style.borderColor = "#4fd8f4";
+            otherLabel.style.backgroundColor = "white";
+          } else {
+            const selectedLabel = selectedOption.nextElementSibling;
+            selectedOption.checked = true;
+            selectedLabel.style.backgroundColor = "#0dcaf0";
+            selectedLabel.style.color = "white";
+            selectedLabel.style.borderColor = "#4fd8f4";
+          }
+        });
+      });
+    });
+  }
+  
+  // Reset the correctCount variable to 0
+  correctCount = 0;
+  canvas.style.display = 'none';
+});
 
