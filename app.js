@@ -26,7 +26,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Get references to HTML elements
+// ================================================== Get references to HTML elements
 const userEmail = document.querySelector('#email');
 const userPassword = document.querySelector('#password');
 const signUpButton = document.querySelector('.signUp');
@@ -47,11 +47,12 @@ const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
 const reset = document.querySelector('.reset-quiz');
 const canvas = document.getElementById('barChart');
 
-// Hide the instruction and quiz-question
+// ================================================ Hide the instruction and quiz-question
 topSecret.style.display = 'none';
 questionSection.style.display = 'none';
 
-// Sign User Up
+
+//================================================= Sign User Up
 const signUserUp = async () => {
    const signUpEmail = userEmail.value;
    const signUpPassword = userPassword.value;
@@ -84,7 +85,7 @@ signUpButton.addEventListener('click', () => {
     signUserUp();
 });
 
-//  Sign User In
+// ================================================== Sign User In
 const signUserIn = () => {
   const signInEmail = userEmail.value;
   const signInPassword = userPassword.value;
@@ -113,13 +114,11 @@ const signUserIn = () => {
       errorToast.show();
     });
 }
-
-
 signInButton.addEventListener('click', () => {
   signUserIn();
   });
 
-// check user authentication status
+// ================================================= Check user authentication status
   const checkAuthState = async() => {
   onAuthStateChanged(auth,user => {
   if (user) {
@@ -134,7 +133,8 @@ signInButton.addEventListener('click', () => {
   }) 
   }
   checkAuthState()
-// Sign User Out
+
+// ================================================== Sign User Out
   const signUserOut = async() => {
       await signOut(auth);
   }
@@ -143,7 +143,7 @@ signInButton.addEventListener('click', () => {
       signUserOut();
   })
     
-    // Function to update the timer display
+// ================================================== Function to update the timer display
     let targetTime = 300;
     let currentTime = targetTime;
     function updateTimerDisplay() {
@@ -153,19 +153,25 @@ signInButton.addEventListener('click', () => {
         timer.textContent = formattedTime;
     }
 
-    // Function to start the countdown
-    function startCountdown() {
-        const timerInterval = setInterval(() => {
-            if (currentTime <= 0) {
-                clearInterval(timerInterval);
-                submitButton.click();
-            } else {
-                currentTime--;
-                updateTimerDisplay();
-            }
-          
-        }, 1000);
+// =================================================== Function to start the countdown
+let timerInterval; // Declare the timerInterval variable outside the function
+
+function startCountdown() {
+  if (timerInterval) {
+    clearInterval(timerInterval); // Clear the previous timer if it exists
+  }
+
+  timerInterval = setInterval(() => {
+    if (currentTime <= 0) {
+      clearInterval(timerInterval);
+      submitButton.click();
+    } else {
+      currentTime--;
+      updateTimerDisplay();
     }
+  }, 1000);
+}
+
     start.addEventListener('click', () => {
       topSecret.style.display = 'none';
       timer.style.display = 'block';
@@ -173,67 +179,39 @@ signInButton.addEventListener('click', () => {
       startCountdown();
     })
 
-
-    
-// Define correct answers
-const correctAnswers = ["Paris", "Mars", "Blue Whale", "H2o", "Wind", "Jupiter", "Leonardo da Vinci", "Bird", "Photosynthesis", "Au"];
-
-// Initialize variables
-let correctCount = 0;
-let performanceChart; // Declare the performanceChart variable here
-
-
-// click event listener to the "Submit" button
-submitButton.addEventListener('click', () => {
-  correctCount = 0;
-  // show reset button
-  reset.style.display = 'inline-block';
-  // Make the correct option green and wrong one red
-  for (let i = 1; i <= 10; i++) {
-    const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
-    options.forEach((option) => {
-      const labelElement = option.nextElementSibling; // Get the label element
-      const userAnswer = labelElement.textContent;
-      if (userAnswer === correctAnswers[i - 1]) {
-        labelElement.style.backgroundColor = "green";
-        labelElement.style.color = "white"
-        labelElement.style.borderColor = "green";
-      } else {
-        labelElement.style.backgroundColor = "red";
-        labelElement.style.color = "white"
-        labelElement.style.borderColor = "red";
-      }
+// =================================== Changes the background color of selected option
+for (let i = 1; i <= 10; i++) {
+  const radioButtons = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+  radioButtons.forEach((radioButton) => {
+    radioButton.addEventListener('click', () => {
+// Set the background color of the selected option to "blue" and makes sure only one option is selected at a time
+      const selectedOption = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
+      radioButtons.forEach((otherRadioButton) => {
+        const otherLabel = otherRadioButton.nextElementSibling;
+        if (otherRadioButton !== selectedOption) {
+          otherRadioButton.checked = false; // Uncheck the other option 
+          otherLabel.style.color = "#4fd8f4";
+          otherLabel.style.borderColor = "#4fd8f4";
+          otherLabel.style.backgroundColor = "white";
+        } else {
+          const selectedLabel = selectedOption.nextElementSibling;
+          selectedOption.checked = true;
+          selectedLabel.style.backgroundColor = "#0dcaf0";
+          selectedLabel.style.color = "white";
+          selectedLabel.style.borderColor = "#4fd8f4";
+        }
+      });
     });
-  }
-  // Loop through radio buttons and check answers
-  for (let i = 1; i <= 10; i++) {
-    const selectedAnswer = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
-    if (selectedAnswer) {
-      const userAnswer = selectedAnswer.nextElementSibling.textContent;
-      const feedbackP = document.getElementById(`feedback-${i}-${selectedAnswer.id.slice(-1)}`); // Get the feedback
-      
-      if (userAnswer === correctAnswers[i - 1]) {
-        correctCount++;
-        // Display correct feedback
-        feedbackP.innerHTML = 'You answered correctly';
-        feedbackP.style.color = 'green';
-      } else {
-        // Display wrong feedback
-        feedbackP.innerHTML = 'You answered wrong';
-        feedbackP.style.color = 'red';
-      }
-    }
-  }
-  
-  // Calculate performance percentage
-  const totalQuestions = 10;
-  const performancePercentage = (correctCount / totalQuestions) * 100;
-  // Display the performance percentage
-  performanceGraph.textContent = `Performance: ${performancePercentage.toFixed(2)}%`;
-  performanceGraph.style.display = 'block';
+  });
+}
 
-  
-canvas.style.display = "block"
+
+
+
+// ================================================== Bar Chart
+let performanceChart; // Declare the performanceChart variable here
+function barChart (performancePercentage) {
+  canvas.style.display = "block"
 // Create the bar chart
 const ctx = canvas.getContext('2d');
 performanceChart = new Chart(ctx, {
@@ -258,27 +236,115 @@ performanceChart = new Chart(ctx, {
     },
   },
 });
+}
 
-})
 
+// ================================================= Define correct answers
+const correctAnswers = ["Paris", "Mars", "Blue Whale", "H2o", "Wind", "Jupiter", "Leonardo da Vinci", "Bird", "Photosynthesis", "Au"];
 
-// Reset quiz
-reset.addEventListener('click', () => {
-  performanceGraph.style.display = 'none';
-  reset.style.display = 'none';
- 
-  // Destroy the existing chart if it exists
-  if (performanceChart) {
-    performanceChart.destroy();
+// ================================================= Initialize variables
+let correctCount = 0;
+let questionAnswered = 0;
+let answeredQuestions = new Set();
+let allQuestionsAnswered;
+
+// ================================================= Check how many questions have been answered
+function checkQuestion() {
+  // Get the common ancestor element for all radio buttons
+const quizContainer = document.getElementById('quiz-container');
+// Set up an event listener for the common ancestor
+quizContainer.addEventListener('click', (event) => {
+  if (event.target.type === 'radio') {
+    const radioButton = event.target;
+    const questionName = radioButton.getAttribute('name');
+    
+    if (!answeredQuestions.has(questionName) && radioButton.checked) {
+      answeredQuestions.add(questionName);
+      questionAnswered++;
+    }
   }
+});
 
-  // Reset Time
-  currentTime = targetTime;
-  updateTimerDisplay();
-  feedbackElements.forEach((feedbackElement) => {
-    feedbackElement.innerHTML = '';
+
+   // Set allQuestionsAnswered based on whether all 10 questions have been answered
+  allQuestionsAnswered = questionAnswered === 10;  
+}
+
+// ================================================= "Submit" Quiz
+submitButton.addEventListener('click', () => {
+  checkQuestion();
+  if (allQuestionsAnswered) {
+    correctCount = 0;
+    //  ======== Display feedback if any questions are answered
+      for (let i = 1; i <= 10; i++) {
+        const selectedAnswers = document.querySelectorAll(`input[name="vbtn-radio-${i}"]:checked`);
+        selectedAnswers.forEach((selectedAnswer) => {
+          if (selectedAnswer) {
+            const userAnswer = selectedAnswer.nextElementSibling.textContent;
+            const feedbackP = document.getElementById(`feedback-${i}-${selectedAnswer.id.slice(-1)}`); // Get the feedback
+            if (userAnswer === correctAnswers[i - 1]) {
+              correctCount++;
+              // Display correct feedback
+              feedbackP.innerHTML = 'You answered correctly';
+              feedbackP.style.color = 'green';
+            } else {
+              // Display wrong feedback
+              feedbackP.innerHTML = 'You answered wrong';
+              feedbackP.style.color = 'red';
+            }
+          }
+        });  
+      }
+       // Calculate performance percentage
+       const totalQuestions = 10;
+       const performancePercentage = (correctCount / totalQuestions) * 100;
+       // Display the performance percentage
+        performanceGraph.textContent = `Performance: ${performancePercentage.toFixed(2)}%`;
+        performanceGraph.style.display = "block";
+        barChart(performancePercentage)
+    
+     // Make the correct option green and wrong one red
+      for (let i = 1; i <= 10; i++) {
+        const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+         // Flag to track if the question is answered
+        options.forEach((option) => {
+          const labelElement = option.nextElementSibling; // Get the label element
+          const userAnswer = labelElement.textContent;
+          if (userAnswer === correctAnswers[i - 1]) {
+            labelElement.style.backgroundColor = "green";
+            labelElement.style.color = "white"
+            labelElement.style.borderColor = "green";
+          } else {
+            labelElement.style.backgroundColor = "red";
+            labelElement.style.color = "white"
+            labelElement.style.borderColor = "red";
+          }
+        });
+      }   
+  } else {
+    const errorToast = new bootstrap.Toast(document.getElementById('errorToast-2'));
+      const errorToastBody = document.querySelector('#errorToast-2 .toast-body');
+      errorToastBody.textContent = 'Please answer all questions before submitting';
+      errorToast.show();
+      performanceGraph.style.display = 'none';
+      canvas.style.display = "none";
+        const options = document.querySelectorAll(`input[type="radio"]`);
+        options.forEach((option) => {
+          const labelElement = option.nextElementSibling; // Get the label element
+          // Reset the color and background color
+          labelElement.style.color = "#4fd8f4";
+          labelElement.style.borderColor = "#4fd8f4";
+          labelElement.style.backgroundColor = "white";
+        });
+        questionAnswered = 0;
+        correctCount = 0;
+        answeredQuestions.clear();
+    }
   });
 
+//Reset quiz
+reset.addEventListener('click', () => {
+  performanceGraph.style.display = 'none';
   //Turns the option back to default
   const options = document.querySelectorAll(`input[type="radio"]`);
   options.forEach((option) => {
@@ -289,35 +355,20 @@ reset.addEventListener('click', () => {
     labelElement.style.backgroundColor = "white";
   });
 
-  // Changes the background color of selected option
-  for (let i = 1; i <= 10; i++) {
-    const radioButtons = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
-    radioButtons.forEach((radioButton) => {
-      radioButton.addEventListener('click', () => {
-        // Set the background color of the selected option to "blue"
-        const selectedOption = document.querySelector(`input[name="vbtn-radio-${i}"]:checked`);
-        // makes sure only one option is selected at a time 
-        radioButtons.forEach((otherRadioButton) => {
-          const otherLabel = otherRadioButton.nextElementSibling;
-          if (otherRadioButton !== selectedOption) {
-            otherRadioButton.checked = false; // Uncheck the other option 
-            otherLabel.style.color = "#4fd8f4";
-            otherLabel.style.borderColor = "#4fd8f4";
-            otherLabel.style.backgroundColor = "white";
-          } else {
-            const selectedLabel = selectedOption.nextElementSibling;
-            selectedOption.checked = true;
-            selectedLabel.style.backgroundColor = "#0dcaf0";
-            selectedLabel.style.color = "white";
-            selectedLabel.style.borderColor = "#4fd8f4";
-          }
-        });
-      });
-    });
-  }
-  
+  // Reset the correctCount variable to 0
+  currentTime = targetTime;
+  updateTimerDisplay();
+  feedbackElements.forEach((feedbackElement) => {
+    feedbackElement.innerHTML = '';
+  });
+
   // Reset the correctCount variable to 0
   correctCount = 0;
+  answeredQuestions.clear();
+  questionAnswered = 0;
+  // Destroy the existing chart if it exists
+  if (performanceChart) {
+    performanceChart.destroy();
+  }
   canvas.style.display = 'none';
 });
-

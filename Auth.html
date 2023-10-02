@@ -322,8 +322,22 @@
 
        <div class="text-center">
         <button class="btn btn-success mb-4 submit-question">Submit</button>
-        <button class="btn btn-danger mb-4 reset-quiz hidden">Reset</button>
+        <button class="btn btn-danger mb-4 reset-quiz">Reset</button>
        </div>
+
+        <!-- ================ Error Toast =============== -->
+        <div class="toast-container position-fixed top-0 end-0 p-3 ">
+          <div id="errorToast-2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <i class="bi bi-exclamation-triangle-fill color-red"></i>
+              <strong class="me-auto">Error</strong>
+              <small>2 sec ago</small>
+              <button type="button" class="btn-close me-1" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+            </div>
+          </div>
+        </div>
             <!-- Placeholder for the graph -->
             <div id="performance-graph"></div>
           </div>
