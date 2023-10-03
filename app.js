@@ -248,28 +248,27 @@ let questionAnswered = 0;
 let answeredQuestions = new Set();
 let allQuestionsAnswered;
 
-// ================================================= Check how many questions have been answered
+
+
+//================================= Function to check how many questions have been answered
 function checkQuestion() {
-  // Get the common ancestor element for all radio buttons
-const quizContainer = document.getElementById('quiz-container');
-// Set up an event listener for the common ancestor
-quizContainer.addEventListener('click', (event) => {
-  if (event.target.type === 'radio') {
-    const radioButton = event.target;
+  // Set allQuestionsAnswered based on whether all 10 questions have been answered
+  allQuestionsAnswered = questionAnswered === 10;
+}
+
+// Get all radio buttons
+const radioButtons = document.querySelectorAll('input[type="radio"]');
+
+// Attach event listeners to radio buttons
+radioButtons.forEach((radioButton) => {
+  radioButton.addEventListener('click', () => {
     const questionName = radioButton.getAttribute('name');
-    
     if (!answeredQuestions.has(questionName) && radioButton.checked) {
       answeredQuestions.add(questionName);
       questionAnswered++;
     }
-  }
-});
-
-
-   // Set allQuestionsAnswered based on whether all 10 questions have been answered
-  allQuestionsAnswered = questionAnswered === 10;  
-}
-
+  });
+  });
 // ================================================= "Submit" Quiz
 submitButton.addEventListener('click', () => {
   checkQuestion();
