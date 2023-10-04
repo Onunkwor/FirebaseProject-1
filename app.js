@@ -5,9 +5,6 @@ import { getAuth,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    sendPasswordResetEmail,
-    sendEmailVerification,
-    updateEmail
     } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -141,6 +138,7 @@ signInButton.addEventListener('click', () => {
 
   signOutButton.addEventListener('click', () => {
       signUserOut();
+      questionSection.style.display = 'none';
   })
     
 // ================================================== Function to update the timer display
@@ -172,6 +170,11 @@ function startCountdown() {
   }, 1000);
 }
 
+function pauseCountdown() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+}
     start.addEventListener('click', () => {
       topSecret.style.display = 'none';
       timer.style.display = 'block';
@@ -238,6 +241,29 @@ performanceChart = new Chart(ctx, {
 });
 }
 
+// ================================================== Function to disable the input
+// ...
+
+// Function to disable radio buttons
+function disableRadioButtons() {
+  for (let i = 1; i <= 10; i++) {
+  const radioButtons = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+  radioButtons.forEach((radioButton) => {
+    radioButton.disabled = true;
+  });
+}
+}
+
+// Function to enable radio buttons
+function enableRadioButtons() {
+  for (let i = 1; i <= 10; i++) {
+    const radioButtons = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+    radioButtons.forEach((radioButton) => {
+      radioButton.disabled = false;
+    });
+  }
+  }
+
 
 // ================================================= Define correct answers
 const correctAnswers = ["Paris", "Mars", "Blue Whale", "H2o", "Wind", "Jupiter", "Leonardo da Vinci", "Bird", "Photosynthesis", "Au"];
@@ -247,7 +273,6 @@ let correctCount = 0;
 let questionAnswered = 0;
 let answeredQuestions = new Set();
 let allQuestionsAnswered;
-
 
 
 //================================= Function to check how many questions have been answered
@@ -304,7 +329,7 @@ submitButton.addEventListener('click', () => {
     
      // Make the correct option green and wrong one red
       for (let i = 1; i <= 10; i++) {
-        const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]`);
+        const options = document.querySelectorAll(`input[name="vbtn-radio-${i}"]:checked`);
          // Flag to track if the question is answered
         options.forEach((option) => {
           const labelElement = option.nextElementSibling; // Get the label element
@@ -319,7 +344,11 @@ submitButton.addEventListener('click', () => {
             labelElement.style.borderColor = "red";
           }
         });
-      }   
+      } 
+      // pause countdown
+      pauseCountdown()
+      // disable radio buttons
+      disableRadioButtons();
   } else {
     const errorToast = new bootstrap.Toast(document.getElementById('errorToast-2'));
       const errorToastBody = document.querySelector('#errorToast-2 .toast-body');
@@ -338,6 +367,9 @@ submitButton.addEventListener('click', () => {
         questionAnswered = 0;
         correctCount = 0;
         answeredQuestions.clear();
+        currentTime = targetTime;
+        updateTimerDisplay();
+        startCountdown();
     }
   });
 
@@ -357,6 +389,7 @@ reset.addEventListener('click', () => {
   // Reset the correctCount variable to 0
   currentTime = targetTime;
   updateTimerDisplay();
+  startCountdown();
   feedbackElements.forEach((feedbackElement) => {
     feedbackElement.innerHTML = '';
   });
@@ -370,4 +403,11 @@ reset.addEventListener('click', () => {
     performanceChart.destroy();
   }
   canvas.style.display = 'none';
+  //   enable radio button
+  enableRadioButtons()
 });
+
+
+
+
+
